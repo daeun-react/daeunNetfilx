@@ -1,124 +1,172 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
-const Button = styled.button`
-  background-color: white;
-  border: none;
-  margin-top: 20px;
-  padding: 10px;
-`;
-const Tabs = styled.div``;
-const TabContent = styled.div`
-  background-color: white;
-  z-index: 0;
-  color: black;
+const Tabs = styled.div`
+  opacity: 0.7;
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
 `;
 
+const Content = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: grey;
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+  text-align: center;
+  height: 380px;
+  padding: 10px;
+`;
+
+const UL = styled.ul`
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+`;
+const LI = styled.li`
+  background-color: grey;
+  opacity: 1;
+  padding: 10px;
+`;
+
+const Item = styled.div`
+  width: 100%;
+  margin: 20px;
+`;
+
+const Iframe = styled.iframe`
+  width: 300px;
+  height: 300px;
+`;
+
+const Wrap = styled.div`
+  text-align: center;
+  font-size: 20px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  margin: 10px;
+`;
+
+const Title = styled.div`
+  font-size: 16pt;
+  color: black;
+  text-align: left;
+`;
+
+const Image = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+
+const Label = styled.span`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
+`;
+const LabelName = styled.span``;
+const ImageS = styled.img`
+  width: 200px;
+  height: 280px;
+`;
 const url = "https://image.tmdb.org/t/p/w200/";
 const youTubeUrl = "https://www.youtube.com/embed/";
 
 const Videos = ({ videos }) => {
   return (
-    <div style={{ display: "flex" }}>
+    <Content>
       {videos.results !== null &&
         videos.results.map((video) => (
-          <div key={video.key}>
-            <iframe
+          <Item key={video.key}>
+            <Iframe
               title={video.name}
               src={`${youTubeUrl}${video.key}`}
-            ></iframe>
-          </div>
+            ></Iframe>
+          </Item>
         ))}
-    </div>
+    </Content>
   );
 };
 
 const Production = ({ companies, countries }) => {
-  console.log(companies);
   return (
-    <div style={{ display: "flex" }}>
-      <div>
-        <span>Companies</span>
+    <Content>
+      <Item>
+        <Title>[Companies]</Title>
         {companies !== null &&
           companies.map((company) => (
-            <div
-              key={company.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <span>
-                <img
-                  src={`${url}${company.logo_path}`}
-                  alt="img"
-                  style={{ width: "35px", height: "35px" }}
-                />
-              </span>
-              <span> {company.name} </span>
-            </div>
+            <Wrap key={company.id}>
+              <Label>
+                {company.logo_path ? (
+                  <Image src={`${url}${company.logo_path}`} alt="img" />
+                ) : (
+                  <Image
+                    src={require("../../assets/noPosterSmall.png")}
+                    alt="img"
+                  />
+                )}
+              </Label>
+              <LabelName>{company.name}</LabelName>
+            </Wrap>
           ))}
-      </div>
+      </Item>
 
-      <div>
-        <span>Countries</span>
+      <Item>
+        <Title>[Countries]</Title>
         {countries !== null &&
           countries.map((country, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <span>{country.iso_3166_1}</span>
-                <span> {country.name} </span>
-              </div>
-            </div>
+            <Wrap key={index}>
+              <Label> {country.iso_3166_1}</Label>
+              <LabelName> {country.name} </LabelName>
+            </Wrap>
           ))}
-      </div>
-    </div>
+      </Item>
+    </Content>
   );
 };
 
 const Seasons = ({ seasons }) => {
   return (
-    <div style={{ display: "flex" }}>
+    <Content>
       {seasons !== null &&
         seasons.map((season) => (
-          <div>
+          <Item>
             <div>
               {season.poster_path ? (
-                <img src={`${url}${season.poster_path}`} alt="img" />
+                <ImageS src={`${url}${season.poster_path}`} alt="img" />
               ) : (
-                <div style={{ width: "200px", height: "300px" }}></div>
+                <ImageS
+                  src={require("../../assets/noPosterSmall.png")}
+                  alt="img"
+                />
               )}
             </div>
-
-            <div> {season.name} </div>
-          </div>
+            <LabelName> {season.name} </LabelName>
+          </Item>
         ))}
-    </div>
+    </Content>
   );
 };
 
 function DetailTab({ videos, companies, countries, seasons }) {
   const [tab, setTabs] = useState(0);
-  console.log(companies);
+  const onChange = useCallback((tab) => {
+    setTabs(tab);
+  }, []);
   return (
     <Tabs>
-      {videos && <Button onClick={() => setTabs(0)}>Videos</Button>}
-      {companies && <Button onClick={() => setTabs(1)}>Production</Button>}
-      {seasons && <Button onClick={() => setTabs(2)}>Seasons</Button>}
-      <TabContent>
-        {tab === 0 && <Videos videos={videos} />}
-        {tab === 1 && (
-          <Production companies={companies} countries={countries} />
-        )}
-        {tab === 2 && <Seasons seasons={seasons} />}
-      </TabContent>
+      <UL>
+        {videos && <LI onClick={() => onChange(0)}>Videos</LI>}
+        {companies && <LI onClick={() => onChange(1)}>Production</LI>}
+        {seasons && <LI onClick={() => onChange(2)}>Seasons</LI>}
+      </UL>
+      {tab === 0 && <Videos videos={videos} />}
+      {tab === 1 && <Production companies={companies} countries={countries} />}
+      {tab === 2 && <Seasons seasons={seasons} />}
     </Tabs>
   );
 }

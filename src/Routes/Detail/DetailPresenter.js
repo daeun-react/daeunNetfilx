@@ -81,7 +81,7 @@ const DetailPresenter = ({ result, loading, error }) =>
   loading ? (
     <>
       <Helmet>
-        <title>Loading | Nomflix</title>
+        <title>Loading | D-filx</title>
       </Helmet>
       <Loader />
     </>
@@ -90,7 +90,7 @@ const DetailPresenter = ({ result, loading, error }) =>
       <Helmet>
         <title>
           {result.original_title ? result.original_title : result.original_name}{" "}
-          | Nomflix
+          | D-filx
         </title>
       </Helmet>
       <Backdrop

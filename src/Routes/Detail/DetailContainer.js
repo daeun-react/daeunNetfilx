@@ -43,7 +43,6 @@ function useHooks() {
 }
 function DetailContainer() {
   const state = useHooks();
-  console.log(state);
   return <DetailPresenter {...state} />;
 }
 
